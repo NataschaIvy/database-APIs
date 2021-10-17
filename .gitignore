@@ -1,0 +1,3 @@
+py/venv/
+py/__pycache__/
+py/migrations/

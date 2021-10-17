@@ -1,0 +1,17 @@
+FROM python:buster
+
+#install system packages
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    python-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+#install python packages
+COPY . /app
+WORKDIR /app
+RUN pip3 install -r requirements.txt
+
+#execute the setup script
+ENV FLASK_APP=main.py
+RUN ["chmod", "+x", "/app/db_init.sh"]
+ENTRYPOINT [ "sh", "/app/db_init.sh" ]

@@ -1,0 +1,19 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mongo-ingress
+  namespace: mongo
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "mongo.ivy.cx"
+      http:
+        paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: mongo-express
+              port: 
+                number: 80

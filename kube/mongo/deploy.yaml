@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  namespace: mongo
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:      
+      containers:
+        - name: mongo-express
+          image: mongo-express:latest
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: mongo-express-config
+        - name: mongo
+          image: mongo:latest
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 27017
+          envFrom:
+            - configMapRef:
+                name: mongo-config
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-pv-storage
+      volumes:
+        - name: mongo-pv-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc

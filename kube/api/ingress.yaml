@@ -1,0 +1,27 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress-tls
+  namespace: api
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.ivy.cx
+    secretName: api-tls
+  rules:
+    - host: "api.ivy.cx"
+      http:
+        paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: api
+              port: 
+                number: 80
